@@ -1,0 +1,172 @@
+<% layout('app') -%>
+<link rel="stylesheet" href="/css/post.css">
+
+<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+  <script>
+  tinymce.init({
+    selector:'textarea',
+    plugins:'link code',
+    menubar:false,
+    branding: false
+  });
+  </script>
+
+<div class="container m-t-20">
+
+  <% if(message.length > 0){ %>
+    <div class="alert alert-success alert-dismissible">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <%= message %>
+    </div>
+  <% } %>
+
+  <div class="row">
+    <div class="col-lg-6 col-md-offset-3">
+      <div class="newPanel">
+        <div class="newPanel-heading">
+          <i class="fa fa-pencil fa-fw"></i> Make Post
+        </div>
+        <div class="newPanel-body">
+          <img src="<%= user.profile.picture %>" class="img-circle img-responsive img-center img-thumbnail" alt="<%= user.profile.name %>">
+          <span class="open" style="color:#dddfe2">What's on your mind?</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <% for(var i = 0; i < posts.length; i++){ %>
+      <div class="col-md-6 col-md-offset-3">
+        <div class="PostDiv whiteDiv thumbnail">
+        <div class="top">
+          <div class="media">
+            <div class="media-left">
+              <img class="img-circle img-thumbnail" src="https://www.w3schools.com/howto/img_avatar.png" alt="" style="width:50px">
+            </div>
+            <div class="media-body">
+              <a class="media-heading" href="#"><%= posts[i].author.profile.name %></a><br>
+              <small><%= date.format(posts[i].createdAt, 'DD MMM YYYY, hh:mm A') %></small>
+            </div>
+
+            <div class="media-right dropdown" style="position:absolute;right:25px">
+              <i class="fa fa-ellipsis-h dropdown-toggle" data-toggle="dropdown" style="color:#bbb;cursor:pointer"></i>
+              <ul class="dropdown-menu pull-left">
+                <li><a onclick="document.getElementById('<%= posts[i]._id %>').style.display='block'">Edit Post</a></li>
+                <li>
+                  <a onclick="
+                     if(confirm('Are you sure, You Want to delete this?')){
+                       event.preventDefault();
+                       document.getElementById('d<%= posts[i]._id %>').submit();
+                     } else {
+                       event.preventDefault();
+                     }"> Delete
+                  </a>
+              </li>
+              </ul>
+            </div>
+
+            <!-- <div class="media-right" onclick="document.getElementById('<%= posts[i]._id %>').style.display='block'">
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+            </div> -->
+
+            <form action="/posts/delete/<%= posts[i]._id %>" method="post" id="d<%= posts[i]._id %>">
+            </form>
+
+            <div id="<%= posts[i]._id %>" class="editPostModal">
+              <div class="modal-content animate">
+                <div class="media" style="background-color:#f1f1f1">
+                  <div class="media-left">
+                    <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" class="avatar img-thumbnail">
+                    <a href="#"><%= posts[i].author.profile.name %></a> |
+                    <small>Last updated: <%= date.format(posts[i].updatedAt, 'DD MMM YYYY, hh:mm A') %></small>
+                  </div>
+                  <div class="media-right">
+                    <span onclick="document.getElementById('<%= posts[i]._id %>').style.display='none'" class="closeContainer" title="Close Modal">&times;</span>
+                  </div>
+                </div>
+               <form action="/posts/<%= posts[i]._id %>" method="post">
+                 <div class="postContainer">
+                   <input type="text" name="title" class="input" placeholder="What's on your mind?" value="<%= posts[i].title %>" required>
+                   <textarea name="body" style="height:50px"><%- posts[i].body %></textarea>
+                 </div>
+
+                 <div class="postContainer" style="background-color:#f1f1f1">
+                   <input type="file" name="image" id="selectedFile3" style="display:none">
+                   <i class="fa fa-picture-o" onclick="document.getElementById('selectedFile3').click();" style="color:#0077b3;cursor:pointer;" title="Image"></i>
+                   <button type="submit" class="btn newBtn-sm pull-right">Save</button>
+                 </div>
+               </form>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="content">
+          <h3><a href="/posts/<%= posts[i]._id %>"><%= posts[i].title %></a></h3>
+          <% if(posts[i].body.length > 350) { var min = posts[i].body.substring(0, 350) %>
+            <p><%- min %>... <a href="#">More</a></p>
+          <% } else { %>
+            <p><%- posts[i].body %></p>
+          <% } %>
+        </div>
+      </div>
+      </div>
+  <% } %>
+  </div>
+
+
+
+<!-- Popup Modals  -->
+<!--  Post Modal -->
+  <div class="pop-outer" style="display:none;z-index:1">
+  <div class="pop-inner">
+    <div class="newPanel">
+      <div class="newPanel-heading">
+        <a href="#" class="pull-right closex">&times;</a>
+        <i class="fa fa-pencil fa-fw"></i> Make Post
+      </div>
+      <div class="newPanel-body">
+        <div class="media">
+          <div class="media-left">
+            <img src="<%= user.profile.picture %>" class="img-circle img-responsive img-center img-thumbnail" alt="<%= user.profile.name %>">
+          </div>
+          <div class="media-body">
+            <form action="/posts" method="post" enctype="multipart/form-data">
+              <input type="text" name="title" class="input" placeholder="What's on your mind?" required>
+              <textarea name="body" class="input m-t-10" style="height:50px"></textarea>
+              <div class="form-group m-t-10">
+                <input type="file" name="image" id="selectedFile3" style="display:none">
+                <i class="fa fa-picture-o" onclick="document.getElementById('selectedFile3').click();" style="color:silver;cursor:pointer;" ></i>
+                <button type="submit" class="btn newBtn-sm pull-right">Post</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+<!-- end of Post Modal -->
+<!-- end of popup modals -->
+
+
+<!-- scripts for Post Modal -->
+  <script type="text/javascript">
+  $(document).ready(function(){
+  $(".open").click(function(){
+   $('.pop-outer').fadeIn('slow');
+  });
+  $(".closex").click(function(){
+   $('.pop-outer').fadeOut('slow');
+  });
+  });
+  </script>
+
+
+</div>

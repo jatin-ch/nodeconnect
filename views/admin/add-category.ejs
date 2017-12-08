@@ -1,0 +1,28 @@
+<% layout('app') -%>
+<div class="container m-t-20">
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3 whiteDiv" style="padding-bottom:20px">
+
+      <% if(message.length > 0){ %>
+        <div class="alert alert-success alert-dismissible">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <%= message %>
+        </div>
+      <% } %>
+
+        <h1 class="title">New Category</h1>
+        <hr class="m-t-0">
+
+        <form class="" action="" method="post">
+          <div class="form-group">
+            <label="email">Name:</label>
+            <input type="text" name="name" class="input" required />
+          </div>
+          <button type="submit" class="newBtn btn btn-md pull-right">Add New Category</button>
+        </form>
+
+    </div>
+  </div>
+</div>

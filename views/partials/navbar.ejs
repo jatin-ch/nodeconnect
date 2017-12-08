@@ -1,0 +1,77 @@
+<nav class="nav has-shadow" >
+  <div class="container">
+    <div class="nav-left">
+      <a class="nav-item is-paddingless" href="/">
+        <img src="images/logo.png" alt="NodeConnect logo" style="width:100%">
+      </a>
+      <a class="nav-item is-tab is-hidden-mobile m-l-10">Learn</a>
+      <a class="nav-item is-tab is-hidden-mobile" href="/posts">Posts</a>
+      <a class="nav-item is-tab is-hidden-mobile" href="/stories">Stories</a>
+      <!-- <form class="navbar-form is-hidden-mobile" action="/search" method="post">
+        <div class="form-group">
+          <input type="text" name="q" placeholder="Search..." required />
+        </div>
+      </form> -->
+    </div>
+    <span class="nav-toggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </span>
+    <div class="nav-right nav-menu" style="overflow: visible">
+      <a class="nav-item is-tab is-hidden-tablet is-active">Learn</a>
+      <a class="nav-item is-tab is-hidden-tablet" href="/posts">Posts</a>
+      <a class="nav-item is-tab is-hidden-tablet" href="/stories">Stories</a>
+
+      <!-- <form class="navbar-form nav-item is-hidden-mobile" action="/search" method="post">
+        <div class="form-group">
+          <input class="input form-control" type="text" name="q" placeholder="Search..." required />
+          <span class="input-group-btn">
+            <button type="submit" class="btn newBtn"><i class="fa fa-search fa-fw"></i></button>
+          </span>
+        </div>
+      </form> -->
+
+      <div class="form-group navbar-form nav-item is-hidden-mobile">
+        <input class="input form-control" id="search" type="text" name="search_term" placeholder="Search...">
+        <div class="searchResults" id="searchResults"> </div>
+      </div>
+
+        <% if(!user) { %>
+        <a href="/login" class="nav-item is-tab">Login</a>
+        <a href="/signup" class="nav-item is-tab">Signup</a>
+        <% } else { %>
+        <button class="dropdown is-aligned-right nav-item is-tab" >
+          <a class="dropdown-toggle" data-toggle="dropdown"><%= user.profile.name %> <span class="caret"></span></a>
+          <ul class="dropdown-menu dropdown-content" style="overflow: visible;">
+            <li><a href="/profile">
+                  <span class="icon">
+                    <i class="fa fa-fw fa-user-circle-o m-r-5"></i>
+                  </span>Profile
+                </a>
+            </li>
+            <li><a href="#">
+                  <span class="icon">
+                    <i class="fa fa-fw fa-bell m-r-5"></i>
+                  </span>Notifications
+                </a>
+            </li>
+            <li><a href="#">
+                  <span class="icon">
+                    <i class="fa fa-fw fa-cog m-r-5"></i>
+                  </span>Manage
+                </a>
+            </li>
+            <li class="seperator"></li>
+            <li><a href="/logout">
+                  <span class="icon">
+                    <i class="fa fa-fw fa-sign-out m-r-5"></i>
+                  </span>Logout
+                </a>
+            </li>
+          </ul>
+        </button>
+        <% } %>
+    </div>
+  </div>
+</nav>
