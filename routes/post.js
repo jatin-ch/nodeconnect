@@ -3,6 +3,7 @@ var Post = require('../models/post');
 var Purifier = require('html-purify');
 var date = require('date-and-time');
 var multer = require('multer');
+var upload = multer({dest: 'public/uploads'});
 
 
 router.get('/', function(req, res, next){
@@ -14,25 +15,32 @@ router.get('/', function(req, res, next){
       });
 });
 
-router.post('/', function(req, res, next){
+router.post('/', upload.any(), function(req, res, next){
   var post = new Post();
   post.title = req.body.title;
   var purifier = new Purifier();
   post.body = purifier.purify(req.body.body);
   post.author = req.user;
 
-  if(req.file){
-    if (file.originalname.match(/\.(jpg|jpeg|png|gif)$/)){
-      post.image = file.fieldname + "_" + Date.now() + "_" + file.originalname;
-      path.join(__dirname, '/uploads/'+ post.image);
-    }
-  }
+  if(req.files){
+    req.files.forEach(function(file){
+      if (file.originalname.match(/\.(jpg|jpeg|png|gif)$/)){
+        post.image = file.filename; //(new Date).valueOf()+"-"+file.originalname
 
-  post.save(function(err){
-    if(err) return next(err);
-    req.flash('success', 'Successfully added a post');
-    return res.redirect('/posts');
-  });
+        post.save(function(err){
+          if(err) return next(err);
+          req.flash('success', 'Successfully added a post');
+          return res.redirect('/posts');
+        });
+      }
+    });
+    }
+
+  // post.save(function(err){
+  //   if(err) return next(err);
+  //   req.flash('success', 'Successfully added a post');
+  //   return res.redirect('/posts');
+  // });
 });
 
 router.post('/:id', function(req, res, next) {

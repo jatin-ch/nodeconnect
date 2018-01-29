@@ -42,5 +42,5 @@ exports.isAuthenticated = function(req, res, next){
   if(req.isAuthenticated()){
     return next();
   }
-  re.redirect('/login');
+  res.redirect('/login');
 }
